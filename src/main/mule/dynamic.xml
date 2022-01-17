@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7b80de3e-1800-46b2-af95-a8ecb84c23c6" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="dynamicFlow1" doc:id="3bc815c4-1a01-4c42-bc5d-8868366581ff" >
+		<http:listener doc:name="Listener" doc:id="1d110d43-0346-44ed-8b02-4fe5b2605735" config-ref="HTTP_Listener_config" path="dynamic/{uname}/{uname1}"/>
+		<set-variable value='#["hi " ++ message.attributes.uriParams.uname as String]' doc:name="Set Variable" doc:id="8f1b85b6-313d-423e-a099-0c76997c5f50" variableName="name"/>
+		<set-payload value="#[vars.name]" doc:name="Set Payload" doc:id="a6049bc2-b00e-4ae8-a3c7-5fa206c4435b" />
+		<set-variable value='#[message.attributes.uriParams.uname1 as String]' doc:name="Copy_of_Set Variable" doc:id="dde5fe09-c890-47d0-a1f5-958ef7ae7a04" variableName="name1" />
+		<set-payload value="#[payload  ++   vars.name1]" doc:name="Copy_of_Set Payload" doc:id="6e17bbe7-8564-42c5-894b-9c79b6d355f1" />
+	</flow>
+	<flow name="dynamicFlow" doc:id="92a82137-277d-4c27-91ee-b77f51d4a602" >
+		<http:listener doc:name="Listener" doc:id="a6d6dedd-92dc-4317-bbf4-c22cfe25793f" config-ref="HTTP_Listener_config" path="demo1"/>
+		<set-variable value='#["hello" ++ " name"  ++ message.attributes.queryParams.uname as String ++ " city"  ++ message.attributes.queryParams.cityname as String  ++ " state" ++ message.attributes.queryParams.statename as String ++ " country" ++ message.attributes.queryParams.countryname as String]' doc:name="Set Variable" doc:id="365fa343-0f5c-4f07-9439-d4a713507348" variableName="queryparameters"/>
+		<set-payload value='#[vars.queryparameters]' doc:name="Set Payload" doc:id="ed31b81a-d3e7-4257-a463-b5512b62a49b" />
+	</flow>
+</mule>
